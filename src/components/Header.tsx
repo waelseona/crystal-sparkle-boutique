@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Search, ShoppingBag, User } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useCart } from "@/hooks/useCart";
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { getTotalItems } = useCart();
 
   const navigation = [
     { name: "Home", href: "/" },
-    { name: "Shop", href: "/collections" },
-    { name: "About Us", href: "/about" },
-    { name: "Contact", href: "/contact" }
+    { name: "Collections", href: "/", scrollTo: "collections" },
+    { name: "About Us", href: "/", scrollTo: "about" },
+    { name: "Contact", href: "/", scrollTo: "contact" }
   ];
 
   return (
@@ -19,21 +23,21 @@ export const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-serif font-bold bg-gradient-luxury bg-clip-text text-transparent">
+            <Link to="/" className="text-2xl font-serif font-bold bg-gradient-luxury bg-clip-text text-transparent">
               seona
-            </h1>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             {navigation.map((item) => (
-              <a
+              <Link
                 key={item.name}
-                href={item.href}
+                to={item.href}
                 className="text-sm font-medium text-foreground hover:text-luxury-rose-gold transition-colors"
               >
                 {item.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -45,11 +49,18 @@ export const Header = () => {
             <Button variant="ghost" size="icon">
               <User className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" className="relative">
-              <ShoppingBag className="h-4 w-4" />
-              <span className="absolute -top-1 -right-1 h-4 w-4 bg-crystal-red text-white text-xs rounded-full flex items-center justify-center">
-                0
-              </span>
+            <Button variant="ghost" size="icon" className="relative" asChild>
+              <Link to="/cart">
+                <ShoppingBag className="h-4 w-4" />
+                {getTotalItems() > 0 && (
+                  <Badge 
+                    variant="default" 
+                    className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                  >
+                    {getTotalItems()}
+                  </Badge>
+                )}
+              </Link>
             </Button>
           </div>
 
@@ -64,14 +75,14 @@ export const Header = () => {
               <div className="flex flex-col space-y-4 mt-8">
                 <h2 className="text-xl font-serif font-bold mb-4">Menu</h2>
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.href}
                     className="text-lg font-medium text-foreground hover:text-luxury-rose-gold transition-colors py-2"
                     onClick={() => setIsOpen(false)}
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
                 <div className="flex items-center space-x-4 pt-6 border-t">
                   <Button variant="ghost" size="icon">
@@ -80,11 +91,18 @@ export const Header = () => {
                   <Button variant="ghost" size="icon">
                     <User className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="relative">
-                    <ShoppingBag className="h-4 w-4" />
-                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-crystal-red text-white text-xs rounded-full flex items-center justify-center">
-                      0
-                    </span>
+                  <Button variant="ghost" size="icon" className="relative" asChild>
+                    <Link to="/cart">
+                      <ShoppingBag className="h-4 w-4" />
+                      {getTotalItems() > 0 && (
+                        <Badge 
+                          variant="default" 
+                          className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                        >
+                          {getTotalItems()}
+                        </Badge>
+                      )}
+                    </Link>
                   </Button>
                 </div>
               </div>
